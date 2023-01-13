@@ -13,11 +13,3 @@ const conjuntoCartas = document.querySelector('.conjunto-cartas');
 for(let i=0;i<quantidadeCartas;i++){
     conjuntoCartas.innerHTML = conjuntoCartas.innerHTML + `<div class='cartas'><img class ='fundo' src='images/back.png'/><img class ='frente' src='gifs/bobrossparrot.gif'></div>`;
 }
-
-const todasCartas = document.querySelectorAll('.cartas');   
-
-console.log(todasCartas);
-
-console.log(conjuntoCartas);
-
-console.log(quantidadeCartas);
