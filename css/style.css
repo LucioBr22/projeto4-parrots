@@ -42,14 +42,24 @@ body{
     background: #A7E9AF;
     border: 1px solid #99CEA8;
     border-radius: 5px;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transition: transform .5s;
 }
-
 img{
     width: 100px;
     height: 100px;
 }
 
 .cartas.virar{
+    transform: rotateY(180deg);
+}
+
+.frente, .fundo{
+    backface-visibility: hidden;
+    position: absolute;
+}
+.frente{
     transform: rotateY(180deg);
 }
 
