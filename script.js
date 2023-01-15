@@ -8,6 +8,11 @@ while (true){
     }
 }
 
+let timer = document.querySelector('.timer');
+let contador = 0;
+
+let temporizador = setInterval(() => timer.innerHTML = contador++,1000);
+
 const conjuntoCartas = document.querySelector('.conjunto-cartas');
 
 let listaGifs = [
@@ -106,12 +111,24 @@ function resetarTabuleiro(){
 
 todasCartas.forEach(cartas => cartas.addEventListener('click',virarCarta));
 
+let reiniciar;
+
 function finalizarJogo(){
     setTimeout(() => {
         if(quantidadeCartas === f){
-            alert(`Você ganhou em ${n} jogadas`);
+            alert(`Você ganhou em ${n} jogadas! A duração do jogo foi de ${contador-1} segundos!`);
+            while(true){
+                reiniciar = prompt(`Gostaria de reiniciar a partida? Obs.: Apenas sim ou não`)
+                if(reiniciar === 'sim'){
+                    document.location.reload(true);
+                    break;
+                }else if(reiniciar === 'não'){
+                    clearInterval(temporizador);
+                    break;
+                }
+            }
         }
-    }, 100);
+    }, 50);
 }
 
 let n = 0;
