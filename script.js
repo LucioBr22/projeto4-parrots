@@ -1,10 +1,10 @@
-let quantidadeCartas = Number(prompt('Com quantas cartas você quer jogar?'));
+let quantidadeCartas = Number(prompt('Com quantas cartas você quer jogar? Obs.: Escolha um número par de 4 a 14'));
 
 while (true){
     if(quantidadeCartas>=4 && quantidadeCartas<=14 && quantidadeCartas%2 ===0){
         break;
     }else{
-        quantidadeCartas = Number(prompt('Com quantas cartas você quer jogar?'));
+        quantidadeCartas = Number(prompt('Com quantas cartas você quer jogar? Obs.: Escolha um número par de 4 a 14'));
     }
 }
 
@@ -34,27 +34,89 @@ for(let i=0;i<quantidadeCartas;i++){
     let random = (min,max) => Math.floor(Math.random()*(max - min) + min);
     let nomeDoGif = listaGifs[random(0,listaGifs.length)];
     listaGifs.splice(listaGifs.indexOf(nomeDoGif),1);
-
-    conjuntoCartas.innerHTML = conjuntoCartas.innerHTML + `<div class='cartas'><img class ='fundo' src='images/back.png'/><img class ='frente' src='gifs/${nomeDoGif}'></div>`;
+    conjuntoCartas.innerHTML = conjuntoCartas.innerHTML + `<div data-test="card" onclick='contarCartas(this)' class='cartas'><img data-test="face-down-image" class ='fundo' src='images/back.png' alt='parrot'/><img data-test="face-up-image" class ='frente' src='gifs/${nomeDoGif}' alt='${nomeDoGif}'></div>`;
 }
-
-console.log(listaGifs);
 
 const todasCartas = document.querySelectorAll('.cartas');
 
-let virouACarta = false;
-
-let primeiraCarta, segundaCarta;
+let cartaVirada = false;
+let primeiraCarta;
+let segundaCarta;
+let gifDaPrimeiraCarta;
+let gifDaSegundaCarta;
+let bloquearTabuleiro = false;
 
 function virarCarta(){
+    if(bloquearTabuleiro) return;
+    if(this === primeiraCarta) return;
     this.classList.add('virar');
 
-    if(!virouACarta){
-        virouACarta = true;
+    if(!cartaVirada){
+        cartaVirada = true;
         primeiraCarta = this;
+        gifDaPrimeiraCarta = primeiraCarta.querySelector('.frente');
+        gifDaPrimeiraCarta = gifDaPrimeiraCarta.getAttribute('src');
+        return;
     }
+
+    segundaCarta = this;
+
+    gifDaSegundaCarta = segundaCarta.querySelector('.frente');
+    gifDaSegundaCarta = gifDaSegundaCarta.getAttribute('src');
+
+    checarPares();
+}
+
+let f=0;
+
+function checarPares(){
+    
+    if(gifDaPrimeiraCarta === gifDaSegundaCarta){
+        f += 2;
+        desativarCartas();
+        return;
+    }
+
+    desvirarCartas();
+}
+
+function desativarCartas(){
+    primeiraCarta.removeEventListener('click', virarCarta);
+    segundaCarta.removeEventListener('click', virarCarta);
+
+    resetarTabuleiro();
+}
+
+function desvirarCartas() {
+
+    bloquearTabuleiro = true;
+
+    setTimeout(() => {
+        primeiraCarta.classList.remove('virar');
+        segundaCarta.classList.remove('virar');
+
+        resetarTabuleiro();
+    }, 1000);
+}
+
+function resetarTabuleiro(){
+    [cartaVirada, bloquearTabuleiro] = [false,false];
+    [primeiraCarta,segundaCarta] = [null,null];
 }
 
 todasCartas.forEach(cartas => cartas.addEventListener('click',virarCarta));
 
-console.log(todasCartas);
+function finalizarJogo(){
+    setTimeout(() => {
+        if(quantidadeCartas === f){
+            alert(`Você ganhou em ${n} jogadas`);
+        }
+    }, 100);
+}
+
+let n = 0;
+
+function contarCartas(){
+    n++;
+    finalizarJogo();    
+}
